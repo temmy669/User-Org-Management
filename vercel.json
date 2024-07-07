@@ -12,10 +12,10 @@
     ],
 
     "env": {
-    "DB_NAME": "@db-name",
-    "DB_USER": "@db-user",
-    "DB_PASSWORD": "@db-password",
-    "DB_HOST": "@db-host",
-    "DB_PORT": "@db-port"
+    "DB_NAME": "@DB_NAME",
+    "DB_USER": "@DB_USER",
+    "DB_PASSWORD": "@DB_PASSWORD",
+    "DB_HOST": "@DB_HOST",
+    "DB_PORT": "@DB_PORT"
   }
 }
