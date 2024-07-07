@@ -12,7 +12,6 @@
     ],
 
     "env": {
-    "SECRET_KEY": "@your-secret-key",
     "DEBUG": "@debug",
     "DB_NAME": "@db-name",
     "DB_USER": "@db-user",
