@@ -1,0 +1,23 @@
+{
+    "builds": [{
+        "src": "authOrg/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "authOrg/wsgi.py"
+        }
+    ],
+
+    "env": {
+    "SECRET_KEY": "@your-secret-key",
+    "DEBUG": "@debug",
+    "DB_NAME": "@db-name",
+    "DB_USER": "@db-user",
+    "DB_PASSWORD": "@db-password",
+    "DB_HOST": "@db-host",
+    "DB_PORT": "@db-port"
+  }
+}
