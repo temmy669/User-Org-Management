@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'authOrg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB_NAME',
-        'USER': 'DB_USER',
-        'PASSWORD':'DB_PASSWORD',
-        'HOST':'DB_HOST',
-        'PORT':'DB_PORT',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD':env('DB_PASSWORD'),
+        'HOST':env('DB_HOST'),
+        'PORT':env('DB_PORT'),
     }
 }
 AUTH_USER_MODEL = 'authapp.User'
