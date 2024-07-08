@@ -125,7 +125,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Organisation
 from .serializers import UserSerializer, OrganisationSerializer, LoginSerializer
 
-#register
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -178,7 +178,6 @@ class UserDetailView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'userId' 
-
 class OrganisationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganisationSerializer
     permission_classes = [IsAuthenticated]
@@ -206,7 +205,7 @@ class AddUserToOrganisationView(generics.GenericAPIView):
 
     def post(self, request, orgId):
         try:
-            organisation = Organisation.objects.get(orgId=orgId)
+            organisation = Organisation.objects.get(id=orgId)
         except Organisation.DoesNotExist:
             return Response({
                 "status": "Bad request",
@@ -216,7 +215,7 @@ class AddUserToOrganisationView(generics.GenericAPIView):
 
         userId = request.data.get('userId')
         try:
-            user = User.objects.get(userId=userId)
+            user = User.objects.get(id=userId)
         except User.DoesNotExist:
             return Response({
                 "status": "Bad request",
