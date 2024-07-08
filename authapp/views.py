@@ -218,13 +218,21 @@ class UserDetailView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'userId' 
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .models import Organisation
+from .serializers import OrganisationSerializer
+
 class OrganisationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganisationSerializer
-    permission_classes =[IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'orgId'
 
     def get_queryset(self):
-        user = self.request.user
-        return user.organisations.all()
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return user.organisations.all()
+        return Organisation.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(users=[self.request.user])
@@ -235,6 +243,11 @@ class OrganisationDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'orgId'
 
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return Organisation.objects.filter(users=user)
+        return Organisation.objects.all()
     
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
