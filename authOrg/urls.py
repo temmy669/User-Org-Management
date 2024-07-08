@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from authapp.views import RegisterView
+from authapp.views import RegisterView
 from rest_framework.routers import DefaultRouter
 from authapp.views import UserOrganisationsView, CreateOrganisationView, UserDetailView,  OrganisationViewSet, OrganisationDetailView, AddUserToOrganisationView
 
@@ -34,5 +34,5 @@ urlpatterns = [
     path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
     # path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'), 
     # path('api/organisations/', CreateOrganisationView.as_view(), name='create-organisation') # New endpoint
-    path('', include('router.urls'))
+
 ]
