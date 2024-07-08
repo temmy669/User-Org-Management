@@ -224,7 +224,7 @@ class AddUserToOrganisationView(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request, orgId):
-        organisation = get_object_or_404(Organisation, id=orgId)
+        organisation = get_object_or_404(Organisation, orgId=orgId)
         userId = request.data.get('userId')
         
         if not userId:
@@ -234,7 +234,7 @@ class AddUserToOrganisationView(generics.GenericAPIView):
                 "statusCode": 400
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        user = get_object_or_404(User, id=userId)
+        user = get_object_or_404(User, userId=userId)
         
         organisation.users.add(user)
         return Response({
