@@ -20,6 +20,6 @@ from authapp.views import RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+    path('', RegisterView.as_view(), name='register'),
     path('', include('authapp.urls'))
 ]
