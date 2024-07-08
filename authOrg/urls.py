@@ -27,7 +27,7 @@ router.register(r'organisations', OrganisationViewSet, basename='organisation')
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('auth/register', RegisterView.as_view(), name='register'),
-    path('auth', include('authapp.urls')),
+    path('auth/', include('authapp.urls')),
     path('api/users/<str:userId>/', UserDetailView.as_view(), name='user-detail'),
     path('api/', include(router.urls)),
     path('api/organisations/<str:orgId>/', OrganisationDetailView.as_view(), name='organisation-detail'),
