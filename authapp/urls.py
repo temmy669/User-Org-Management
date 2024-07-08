@@ -6,8 +6,8 @@ router = DefaultRouter()
 router.register(r'organisations', OrganisationViewSet, basename='organisation')
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
+    path('register', RegisterView.as_view(), name='register'),
+    path('login', LoginView.as_view(), name='login'),
     # path('api/users/<str:userId>/', UserDetailView.as_view(), name='user-detail'),
     # path('api/', include(router.urls)),
     # path('api/organisations/<str:orgId>/', OrganisationDetailView.as_view(), name='organisation-detail'),
