@@ -29,4 +29,4 @@ class LoginSerializer(serializers.Serializer):
 class OrganisationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organisation
-        fields = ['orgId', 'name', 'description', 'users']
+        fields = ['orgId', 'name', 'description']
