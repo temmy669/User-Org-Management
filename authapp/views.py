@@ -134,7 +134,7 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            refresh = RefreshToken.for_user(user)
+            # refresh = RefreshToken.for_user(user)
             return Response({
                 "status": "success",
                 "message": "Registration successful",
