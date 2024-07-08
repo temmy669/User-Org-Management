@@ -289,7 +289,7 @@ class UserOrganisationsView(generics.ListAPIView):
             }
         }, status=status.HTTP_200_OK)
     
-    class OrganisationViewSet(viewsets.ViewSet):
+class OrganisationViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
