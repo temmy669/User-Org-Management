@@ -130,7 +130,7 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -139,7 +139,7 @@ class RegisterView(generics.CreateAPIView):
                 "status": "success",
                 "message": "Registration successful",
                 "data": {
-                    "accessToken": str(refresh.access_token),
+                    # "accessToken": str(refresh.access_token),
                     "user": UserSerializer(user).data
                 }
             }, status=status.HTTP_201_CREATED)
