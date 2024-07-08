@@ -233,11 +233,9 @@ class OrganisationDetailView(generics.RetrieveAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'orgId'
 
-    def get_queryset(self):
-        user = self.request.user
-        return Organisation.objects.filter(users=user)
-
+    
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
