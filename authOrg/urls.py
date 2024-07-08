@@ -20,20 +20,19 @@ from authapp.views import RegisterView
 from rest_framework.routers import DefaultRouter
 from authapp.views import UserOrganisationsView, CreateOrganisationView, UserDetailView,  OrganisationViewSet, OrganisationDetailView, AddUserToOrganisationView
 
-router = DefaultRouter()
-router.register(r'organisations', OrganisationViewSet, basename='organisation')
+# router = DefaultRouter()
+# router.register(r'organisations', OrganisationViewSet, basename='organisation')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('auth/register', RegisterView.as_view(), name='register'),
     path('auth/', include('authapp.urls')),
-     path('api/organisations/', CreateOrganisationView.as_view({'post': 'create'}), name='create_organisation'),
     path('api/users/<str:userId>', UserDetailView.as_view(), name='user-detail'),
-    path('api/', include(router.urls)),
+    # path('api/', include(router.urls)),
     path('api/organisations/<str:orgId>', OrganisationDetailView.as_view(), name='organisation-detail'),
     path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
-    # path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'), 
-    # path('api/organisations/', CreateOrganisationView.as_view(), name='create-organisation') # New endpoint
+    path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'), 
+    path('api/organisations/', CreateOrganisationView.as_view(), name='create-organisation') # New endpoint
 
 ]
