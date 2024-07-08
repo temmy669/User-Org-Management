@@ -30,8 +30,8 @@ urlpatterns = [
     path('auth/', include('authapp.urls')),
     path('api/users/<str:userId>', UserDetailView.as_view(), name='user-detail'),
     path('api/', include(router.urls)),
-    path('api/organisations/<str:orgId>', OrganisationDetailView.as_view(), name='organisation-detail'),
+    path('api/organisations/<str:orgId>', UserOrganisationsView.as_view(), name='organisation-detail'),
     path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
-    path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'),  # New endpoint
+    path('api/organisations', OrganisationDetailView.as_view(), name='user-organisations'),  # New endpoint
 
 ]
