@@ -228,6 +228,49 @@ class OrganisationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(users=[self.request.user])
 
+class OrganisationListCreateView(generics.ListCreateAPIView):
+    serializer_class = OrganisationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # This will return organisations for the authenticated user
+        return Organisation.objects.filter(users=self.request.user)
+
+    def perform_create(self, serializer):
+        # Save the new organisation with the current user as one of its members
+        serializer.save(users=[self.request.user])
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "status": "success",
+            "message": "Organisations retrieved successfully",
+            "data": {
+                "organisations": serializer.data
+            }
+        }, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            organisation = serializer.save(users=[self.request.user])
+            return Response({
+                "status": "success",
+                "message": "Organisation created successfully",
+                "data": {
+                    "orgId": organisation.orgId,
+                    "name": organisation.name,
+                    "description": organisation.description
+                }
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            "status": "Bad Request",
+            "message": "Client error",
+            "statusCode": 400,
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
