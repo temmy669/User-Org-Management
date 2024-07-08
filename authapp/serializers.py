@@ -4,29 +4,29 @@ from .models import User, Organisation
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['userId', 'firstName', 'lastName', 'email', 'password', 'phone']
+        fields = ['userId', 'firstName', 'lastName', 'email', 'phone', 'is_active', 'is_staff']
         extra_kwargs = {
-            'password': {'write_only': True},
+            'password': {'write_only': True}
         }
 
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("A user with this email already exists.")
-        return value
-
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        # Create default organisation and associate it with the user
-        organisation_name = f"{user.firstName}'s Organisation"
-        organisation = Organisation.objects.create(name=organisation_name)
-        organisation.users.add(user)
+        user = User.objects.create(
+            email=validated_data['email'],
+            firstName=validated_data['firstName'],
+            lastName=validated_data['lastName'],
+            phone=validated_data.get('phone')
+        )
+        user.set_password(validated_data['password'])
+        user.save()
         return user
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField()
-    password = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
 
 class OrganisationSerializer(serializers.ModelSerializer):
+    users = UserSerializer(many=True, read_only=True)
+
     class Meta:
         model = Organisation
         fields = ['orgId', 'name', 'description', 'users']

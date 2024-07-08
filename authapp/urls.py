@@ -4,13 +4,12 @@ from .views import RegisterView, LoginView, UserDetailView, OrganisationViewSet,
 
 router = DefaultRouter()
 router.register(r'organisations', OrganisationViewSet, basename='organisation')
-router.register(r'users', UserDetailView, basename='user')
 
 urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),
     path('auth/login/', LoginView.as_view(), name='login'),
-    path('api/users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('api/users/<str:userId>/', UserDetailView.as_view(), name='user-detail'),
     path('api/', include(router.urls)),
-    path('api/organisations/<int:orgId>/', OrganisationDetailView.as_view(), name='organisation-detail'),
-    path('api/organisations/<int:orgId>/users/', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
+    path('api/organisations/<str:orgId>/', OrganisationDetailView.as_view(), name='organisation-detail'),
+    path('api/organisations/<str:orgId>/users/', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
 ]
