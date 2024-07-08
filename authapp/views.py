@@ -157,22 +157,29 @@ class LoginView(generics.GenericAPIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(email=email, password=password)
+        
         if user is not None:
             refresh = RefreshToken.for_user(user)
+            
+            # Get organizations user belongs to
+            organisations = Organisation.objects.filter(users=user)
+            organisation_data = OrganisationSerializer(organisations, many=True).data
+            
             return Response({
                 "status": "success",
                 "message": "Login successful",
                 "data": {
                     "accessToken": str(refresh.access_token),
-                    "user": UserSerializer(user).data
+                    "user": UserSerializer(user).data,
+                    "organisations": organisation_data
                 }
             }, status=status.HTTP_200_OK)
+        
         return Response({
             "status": "Bad request",
             "message": "Authentication failed",
             "statusCode": 401
         }, status=status.HTTP_401_UNAUTHORIZED)
-
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
