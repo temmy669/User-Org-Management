@@ -120,7 +120,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Organisation
 from .serializers import UserSerializer, OrganisationSerializer, LoginSerializer
@@ -208,7 +208,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
 class OrganisationDetailView(generics.RetrieveAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'orgId'
 
     def get_queryset(self):
