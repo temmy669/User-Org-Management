@@ -150,36 +150,6 @@ class RegisterView(generics.CreateAPIView):
             "errors": serializer.errors
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-# class LoginView(generics.GenericAPIView):
-#     serializer_class = LoginSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-#         user = authenticate(email=email, password=password)
-        
-#         if user is not None:
-#             refresh = RefreshToken.for_user(user)
-            
-#             # Get organizations user belongs to
-#             organisations = Organisation.objects.filter(users=user)
-#             organisation_data = OrganisationSerializer(organisations, many=True).data
-            
-#             return Response({
-#                 "status": "success",
-#                 "message": "Login successful",
-#                 "data": {
-#                     "accessToken": str(refresh.access_token),
-#                     "user": UserSerializer(user).data,
-#                     "organisations": organisation_data
-#                 }
-#             }, status=status.HTTP_200_OK)
-        
-#         return Response({
-#             "status": "Bad request",
-#             "message": "Authentication failed",
-#             "statusCode": 401
-#         }, status=status.HTTP_401_UNAUTHORIZED)
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -217,11 +187,8 @@ class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    lookup_field = 'userId' 
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Organisation
-from .serializers import OrganisationSerializer
+    lookup_field = 'userId'
+
 
 class OrganisationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganisationSerializer
@@ -237,6 +204,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(users=[self.request.user])
 
+
 class OrganisationDetailView(generics.RetrieveAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
@@ -248,7 +216,8 @@ class OrganisationDetailView(generics.RetrieveAPIView):
             user = self.request.user
             return Organisation.objects.filter(users=user)
         return Organisation.objects.all()
-    
+
+
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
@@ -278,4 +247,26 @@ class AddUserToOrganisationView(generics.GenericAPIView):
         return Response({
             "status": "success",
             "message": "User added to organisation successfully"
+        }, status=status.HTTP_200_OK)
+
+
+class UserOrganisationsView(generics.ListAPIView):
+    serializer_class = OrganisationSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return Organisation.objects.filter(users=user)
+        return Organisation.objects.none()  # Or handle unauthenticated access as needed
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "status": "success",
+            "message": "Organisations retrieved successfully",
+            "data": {
+                "organisations": serializer.data
+            }
         }, status=status.HTTP_200_OK)

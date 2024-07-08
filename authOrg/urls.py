@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from authapp.views import RegisterView
 from rest_framework.routers import DefaultRouter
-from authapp.views import RegisterView, LoginView, UserDetailView, OrganisationViewSet, OrganisationDetailView, AddUserToOrganisationView
+from authapp.views import UserOrganisationsView, UserDetailView,  OrganisationViewSet, OrganisationDetailView, AddUserToOrganisationView
 
 router = DefaultRouter()
 router.register(r'organisations', OrganisationViewSet, basename='organisation')
@@ -31,5 +31,7 @@ urlpatterns = [
     path('api/users/<str:userId>', UserDetailView.as_view(), name='user-detail'),
     path('api/', include(router.urls)),
     path('api/organisations/<str:orgId>', OrganisationDetailView.as_view(), name='organisation-detail'),
-    path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation')   
+    path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
+    path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'),  # New endpoint
+
 ]
