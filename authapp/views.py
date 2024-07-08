@@ -190,7 +190,7 @@ class LoginView(generics.GenericAPIView):
         user = authenticate(email=email, password=password)
         
         if user is not None:
-            # refresh = RefreshToken.for_user(user)
+            refresh = RefreshToken.for_user(user)
             
             # Get organizations user belongs to
             organisations = Organisation.objects.filter(users=user)
@@ -200,7 +200,7 @@ class LoginView(generics.GenericAPIView):
                 "status": "success",
                 "message": "Login successful",
                 "data": {
-                    # "accessToken": str(refresh.access_token),
+                    "accessToken": str(refresh.access_token),
                     "user": UserSerializer(user).data,
                     "organisations": organisation_data  # Include organisations data
                 }
