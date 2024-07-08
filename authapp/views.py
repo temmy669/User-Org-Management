@@ -214,6 +214,20 @@ class CreateOrganisationView(generics.CreateAPIView):
             "errors": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+class OrganisationViewSet(viewsets.ModelViewSet):
+    serializer_class = OrganisationSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'orgId'
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return user.organisations.all()
+        return Organisation.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(users=[self.request.user])
+
 
 
 
