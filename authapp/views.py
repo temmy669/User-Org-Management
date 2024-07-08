@@ -241,7 +241,7 @@ class OrganisationDetailView(generics.RetrieveAPIView):
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request, orgId):
         try:
