@@ -116,7 +116,7 @@
 
 
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
@@ -221,35 +221,26 @@ class OrganisationDetailView(generics.RetrieveAPIView):
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request, orgId):
-        try:
-            organisation = Organisation.objects.get(id=orgId)
-        except Organisation.DoesNotExist:
-            return Response({
-                "status": "Bad request",
-                "message": "Organisation not found",
-                "statusCode": 404
-            }, status=status.HTTP_404_NOT_FOUND)
-
+        organisation = get_object_or_404(Organisation, id=orgId)
         userId = request.data.get('userId')
-        try:
-            user = User.objects.get(id=userId)
-        except User.DoesNotExist:
+        
+        if not userId:
             return Response({
                 "status": "Bad request",
-                "message": "User not found",
-                "statusCode": 404
-            }, status=status.HTTP_404_NOT_FOUND)
-
+                "message": "userId not provided",
+                "statusCode": 400
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = get_object_or_404(User, id=userId)
+        
         organisation.users.add(user)
         return Response({
             "status": "success",
             "message": "User added to organisation successfully"
         }, status=status.HTTP_200_OK)
-
-
 class UserOrganisationsView(generics.ListAPIView):
     serializer_class = OrganisationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
