@@ -33,6 +33,6 @@ urlpatterns = [
     path('api/organisations/<str:orgId>', OrganisationDetailView.as_view(), name='organisation-detail'),
     path('api/organisations/<str:orgId>/users', AddUserToOrganisationView.as_view(), name='add-user-to-organisation'),
     path('api/organisations', UserOrganisationsView.as_view(), name='user-organisations'), 
-    path('api/organisations', CreateOrganisationView.as_view(), name='create-organisation') # New endpoint
+    path('api/organisations/', CreateOrganisationView.as_view(), name='create-organisation') # New endpoint
 
 ]
