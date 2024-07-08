@@ -216,7 +216,7 @@ class CreateOrganisationView(generics.CreateAPIView):
 
 class OrganisationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'orgId'
 
     def get_queryset(self):

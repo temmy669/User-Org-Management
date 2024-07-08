@@ -21,7 +21,7 @@ from rest_framework.routers import DefaultRouter
 from authapp.views import UserOrganisationsView, CreateOrganisationView, UserDetailView,  OrganisationViewSet, OrganisationDetailView, AddUserToOrganisationView
 
 router = DefaultRouter()
-router.register(r'organisations', OrganisationViewSet, basename='organisation')
+router.register(r'organisations/', OrganisationViewSet, basename='organisation')
 
 
 urlpatterns = [
