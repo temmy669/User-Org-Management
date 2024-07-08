@@ -4,6 +4,7 @@ from .views import RegisterView, LoginView, UserDetailView, OrganisationViewSet,
 
 router = DefaultRouter()
 router.register(r'organisations', OrganisationViewSet, basename='organisation')
+router.register(r'users', UserDetailView, basename='user')
 
 urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),
