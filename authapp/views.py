@@ -162,9 +162,9 @@ class LoginView(generics.GenericAPIView):
         if user is not None:
             refresh = RefreshToken.for_user(user)
             
-            # Get organizations user belongs to
-            organisations = Organisation.objects.filter(users=user)
-            organisation_data = OrganisationSerializer(organisations, many=True).data
+            # # Get organizations user belongs to
+            # organisations = Organisation.objects.filter(users=user)
+            # organisation_data = OrganisationSerializer(organisations, many=True).data
             
             return Response({
                 "status": "success",
@@ -172,7 +172,7 @@ class LoginView(generics.GenericAPIView):
                 "data": {
                     "accessToken": str(refresh.access_token),
                     "user": UserSerializer(user).data,
-                    "organisations": organisation_data  # Include organisations data
+                    # "organisations": organisation_data  # Include organisations data
                 }
             }, status=status.HTTP_200_OK)
         
@@ -186,23 +186,35 @@ class LoginView(generics.GenericAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'userId'
 
 
-class OrganisationViewSet(viewsets.ModelViewSet):
+class CreateOrganisationView(generics.CreateAPIView):
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    lookup_field = 'orgId'
+    permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            user = self.request.user
-            return user.organisations.all()
-        return Organisation.objects.all()
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            organisation = serializer.save(users=[self.request.user])
+            return Response({
+                "status": "success",
+                "message": "Organisation created successfully",
+                "data": {
+                    "orgId": organisation.orgId,
+                    "name": organisation.name,
+                    "description": organisation.description
+                }
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            "status": "Bad Request",
+            "message": "Client error",
+            "statusCode": 400,
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
-    def perform_create(self, serializer):
-        serializer.save(users=[self.request.user])
+
 
 
 class OrganisationDetailView(generics.RetrieveAPIView):
@@ -243,7 +255,7 @@ class AddUserToOrganisationView(generics.GenericAPIView):
         }, status=status.HTTP_200_OK)
 class UserOrganisationsView(generics.ListAPIView):
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
