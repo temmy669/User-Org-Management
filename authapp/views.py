@@ -120,7 +120,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Organisation
 from .serializers import UserSerializer, OrganisationSerializer, LoginSerializer
@@ -221,7 +221,7 @@ class OrganisationDetailView(generics.RetrieveAPIView):
 class AddUserToOrganisationView(generics.GenericAPIView):
     queryset = Organisation.objects.all()
     serializer_class = OrganisationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     def post(self, request, orgId):
         try:
