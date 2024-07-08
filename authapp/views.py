@@ -124,6 +124,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAu
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Organisation
 from .serializers import UserSerializer, OrganisationSerializer, LoginSerializer
+from rest_framework.decorators import action
 
 
 class RegisterView(generics.CreateAPIView):
@@ -287,3 +288,44 @@ class UserOrganisationsView(generics.ListAPIView):
                 "organisations": serializer.data
             }
         }, status=status.HTTP_200_OK)
+    
+    class OrganisationViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Organisation.objects.all()
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def list_organisations(self, request):
+        user = request.user
+        queryset = user.organisations.all()
+        serializer = OrganisationSerializer(queryset, many=True)
+        return Response({
+            "status": "success",
+            "message": "Organisations retrieved successfully",
+            "data": {
+                "organisations": serializer.data
+            }
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def create_organisation(self, request):
+        serializer = OrganisationSerializer(data=request.data)
+        if serializer.is_valid():
+            organisation = serializer.save(users=[request.user])
+            return Response({
+                "status": "success",
+                "message": "Organisation created successfully",
+                "data": {
+                    "orgId": organisation.orgId,
+                    "name": organisation.name,
+                    "description": organisation.description
+                }
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            "status": "Bad Request",
+            "message": "Client error",
+            "statusCode": 400,
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
