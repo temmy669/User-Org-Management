@@ -189,6 +189,18 @@ class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'userId'
 
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        response_data = UserSerializer(user).data
+        print("User Detail Response Data:", response_data)  # Debug print
+        return Response({
+            "status": "success",
+            "message": "User details retrieved successfully",
+            "data": response_data
+        }, status=status.HTTP_200_OK)
+
+
+
 
 class CreateOrganisationView(generics.CreateAPIView):
     serializer_class = OrganisationSerializer
