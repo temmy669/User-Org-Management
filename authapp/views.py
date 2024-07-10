@@ -187,7 +187,7 @@ class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
-    lookup_field = 'userId'
+    lookup_field = 'id'
 
     def get(self, request, *args, **kwargs):
         user = self.get_object()
